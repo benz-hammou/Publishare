@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "tsup src/index.js --format cjs,esm --dts"
+    "build": "ncc build src/index.js -o dist"
   },
   "author": "benzhammou",
   "license": "MIT",
@@ -23,7 +23,8 @@
     "nodemon": "^3.0.1"
   },
   "devDependencies": {
-    "tsup": "^8.0.1",
+    "@vercel/ncc": "^0.38.1",
+    "tsup": "^7.3.0",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
   }
