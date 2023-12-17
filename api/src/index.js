@@ -1,5 +1,4 @@
 const express = require("express");
-const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const user = require("../models/user");
@@ -15,14 +14,26 @@ const PostModel = require("../models/post");
 const salt = bcrypt.genSaltSync(10);
 const secret = "jlchzihcighipefpzeghp";
 
+const app = express();
+const PORT = process.env.PORT || 4000;
+
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
 mongoose.connect(
-  "mongodb+srv://mohamedbenhammo:admin@mycluster.oz2pupu.mongodb.net/?retryWrites=true&w=majority"
+  process.env.MONGODB_URI ||
+    "mongodb+srv://mohamedbenhammo:admin@mycluster.oz2pupu.mongodb.net/?retryWrites=true&w=majority"
 );
+mongoose.connection.on("connected", () => {
+  console.log("Mongoose is connected !");
+});
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('../../client/build'))
+  // "build": "ncc build src/index.js -o dist"
+}
 
 // REGISTER
 app.post("/register", async (req, res) => {
@@ -88,7 +99,7 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, secret, {}, async (err, info) => {
     if (err) throw err;
-    const { title, content, summary, /* category */ } = req.body;
+    const { title, content, summary /* category */ } = req.body;
     const postDoc = await post.create({
       title,
       content,
@@ -153,4 +164,4 @@ app.delete("/post/:id", async (req, res) => {
   res.end();
 });
 
-app.listen(4000);
+app.listen(PORT, console.log(`Server is running at ${PORT}`));
