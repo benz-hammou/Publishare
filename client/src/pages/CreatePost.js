@@ -23,6 +23,7 @@ const CreatePost = () => {
       method: "POST",
       body: data,
       credentials: "include",
+      mode:"no-cors"
     });
     if (res.ok) {
       setRedirect(true);
