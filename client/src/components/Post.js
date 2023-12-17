@@ -14,7 +14,9 @@ const Post = () => {
 
   const getPosts = async () => {
     try {
-      const res = await fetch("https://api-7niz.onrender.com/post");
+      const res = await fetch("https://api-7niz.onrender.com/post",{
+        mode:"no-cors"
+      });
       const data = await res.json();
       console.log(data);
       return setPosts(data);
