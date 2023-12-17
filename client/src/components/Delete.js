@@ -17,7 +17,7 @@ const Delete = ({ id }) => {
 
   const deletePost = async () => {
     try {
-      const res = await fetch(`https://api-7niz.onrender.com/${id}`, {
+      const res = await fetch(`https://api-7niz.onrender.com/post/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
