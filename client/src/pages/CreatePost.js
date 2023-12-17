@@ -19,7 +19,7 @@ const CreatePost = () => {
     data.set("file", files[0]);
     e.preventDefault();
 
-    const res = await fetch("http://localhost:4000/post", {
+    const res = await fetch("https://api-7niz.onrender.com/post", {
       method: "POST",
       body: data,
       credentials: "include",

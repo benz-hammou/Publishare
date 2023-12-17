@@ -60,7 +60,7 @@ const Header = () => {
   }, [pathname]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/profile", {
+    fetch("https://api-7niz.onrender.com/profile", {
       credentials: "include",
     }).then((res) => {
       res.json().then((userInfo) => {
@@ -70,7 +70,7 @@ const Header = () => {
   }, []);
 
   const logout = () => {
-    fetch("http://localhost:4000/logout", {
+    fetch("https://api-7niz.onrender.com/logout", {
       credentials: "include",
       method: "POST",
     });

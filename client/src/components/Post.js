@@ -14,7 +14,7 @@ const Post = () => {
 
   const getPosts = async () => {
     try {
-      const res = await fetch("http://localhost:4000/post");
+      const res = await fetch("https://api-7niz.onrender.com/post");
       const data = await res.json();
       console.log(data);
       return setPosts(data);
@@ -45,7 +45,7 @@ const Post = () => {
               >
                 <Link to={`/post/${_id}`}>
                   <img
-                    src={`http://localhost:4000/${cover}`}
+                    src={`https://api-7niz.onrender.com/${cover}`}
                     alt=""
                     className="h-full w-full object-cover"
                   />

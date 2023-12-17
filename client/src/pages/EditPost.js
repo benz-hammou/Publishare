@@ -13,7 +13,7 @@ const EditPost = () => {
 
   const getEditedContent = async () => {
     try {
-      const res = await fetch(`http://localhost:4000/post/${id}`);
+      const res = await fetch(`https://api-7niz.onrender.com/post/${id}`);
       const data = await res.json();
       const { title, content, summary } = data;
       setTitle(title);
@@ -38,7 +38,7 @@ const EditPost = () => {
     if (files?.[0]) {
       data.set("file", files?.[0]);
     }
-    const res = await fetch("http://localhost:4000/post", {
+    const res = await fetch("https://api-7niz.onrender.com/post", {
       method: "PUT",
       body: data,
       credentials: "include",

@@ -13,7 +13,7 @@ const PostPage = () => {
 
   const getPostId = async () => {
     try {
-      const res = await fetch(`http://localhost:4000/post/${id}`);
+      const res = await fetch(`https://api-7niz.onrender.com/post/${id}`);
       const data = await res.json();
       console.log(data);
       return setPostInfo(data);
@@ -36,7 +36,7 @@ const PostPage = () => {
       <div className=" flex justify-center items-center rounded-xl overflow-hidden mb-8 max-h-50vh lg:w-full">
         <img
           className=" aspect-11/8 object-cover object-center lg:w-full"
-          src={`http://localhost:4000/${cover}`}
+          src={`https://api-7niz.onrender.com/${cover}`}
           alt=""
         />
       </div>
