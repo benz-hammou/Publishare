@@ -27,6 +27,7 @@ const CreatePost = () => {
       credentials: "include",
       mode:"no-cors"
     });
+    console.log('pppppppppppppppppppp'+ res);
     if (res.ok) {
       debugger
       console.log('salam');
