@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Card, Input, Typography } from "@material-tailwind/react";
-import { Navigate } from "react-router-dom";
+import { useNavigate  } from "react-router-dom";
 import Editor from "../components/Editor";
 
 const CreatePost = () => {
@@ -9,7 +9,8 @@ const CreatePost = () => {
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
   const [files, setFiles] = useState("");
-  const [redirect, setRedirect] = useState("");
+  // const [redirect, setRedirect] = useState("");
+  const navigate = useNavigate()
 
   const createNewPost = async (e) => {
     const data = new FormData();
@@ -19,6 +20,7 @@ const CreatePost = () => {
     data.set("file", files[0]);
     e.preventDefault();
 
+
     const res = await fetch("https://api-7niz.onrender.com/post", {
       method: "POST",
       body: data,
@@ -26,13 +28,13 @@ const CreatePost = () => {
       mode:"no-cors"
     });
     if (res.ok) {
-      setRedirect(true);
+      navigate("/");
     }
   };
 
-  if (redirect) {
+/*   if (redirect) {
     return <Navigate to={"/"} />;
-  }
+  } */
   return (
     <div className="flex justify-center items-center h-full w-full m-auto">
         <Card className="w-70% min-h-50vh h-full" color="transparent" shadow={false}>
