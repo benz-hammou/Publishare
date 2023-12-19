@@ -17,7 +17,7 @@ const secret = "jlchzihcighipefpzeghp";
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors({ credentials: true, origin: "https://front-gffr.onrender.com/" }));
+app.use(cors({ credentials: true, origin: "https://front-gffr.onrender.com" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
@@ -29,6 +29,11 @@ mongoose.connect(
 mongoose.connection.on("connected", () => {
   console.log("Mongoose is connected !");
 });
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('../../client/build'))
+  // "build": "ncc build src/index.js -o dist"
+}
 
 // REGISTER
 app.post("/register", async (req, res) => {
