@@ -28,7 +28,7 @@ const CreatePost = () => {
       mode:"no-cors"
     });
     if (res.ok) {
-      navigate("/");
+      return navigate("/");
     }
   };
 
