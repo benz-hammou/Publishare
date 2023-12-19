@@ -28,6 +28,8 @@ const CreatePost = () => {
       mode:"no-cors"
     });
     if (res.ok) {
+      debugger
+      console.log('salam');
       return navigate("/");
     }
   };
