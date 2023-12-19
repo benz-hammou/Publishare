@@ -93,6 +93,10 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   fs.renameSync(path, newPath);
 
   const { token } = req.cookies;
+  if (!token) {
+    res.status(401)
+    res.end()
+  }
   jwt.verify(token, secret, {}, async (err, info) => {
     if (err) throw err;
     const { title, content, summary /* category */ } = req.body;
