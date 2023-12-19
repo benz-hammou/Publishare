@@ -30,11 +30,6 @@ mongoose.connection.on("connected", () => {
   console.log("Mongoose is connected !");
 });
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('../../client/build'))
-  // "build": "ncc build src/index.js -o dist"
-}
-
 // REGISTER
 app.post("/register", async (req, res) => {
   const { username, password /* , email */ } = req.body;
