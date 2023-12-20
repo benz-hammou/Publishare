@@ -26,8 +26,8 @@ const CreatePost = () => {
       credentials: "include",
       mode: "no-cors",
     });
-    console.log("createPost => res");
     if (res.ok) {
+      console.log("createPost => res");
       setRedirect(true);
       // return navigate("/");
     }
