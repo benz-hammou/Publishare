@@ -14,6 +14,7 @@ const RegisterPage = () => {
       body: JSON.stringify({ username, password }),
       headers: { "Content-Type": "application/json" },
     });
+    console.log('registerPage => res');
     if (res.status === 200) {
       alert("Registration successful, profile are create, you can now Login with your Username");
       const data = await res.json();

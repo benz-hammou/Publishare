@@ -18,7 +18,7 @@ const LoginPage = () => {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-    
+    console.log('loginPage => res');
     if (res.ok) {
       alert("You are Loged In !")
       res.json().then((userInfo) => {
