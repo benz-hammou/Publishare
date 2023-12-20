@@ -43,8 +43,8 @@ const EditPost = () => {
       body: data,
       credentials: "include",
     });
-    console.log('editPost => res');
     if (res.ok) {
+      console.log('editPost => res');
       setRedirect(true);
     }
   };

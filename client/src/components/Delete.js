@@ -21,8 +21,8 @@ const Delete = ({ id }) => {
         method: "DELETE",
         credentials: "include",
       });
-      console.log('delete => res');
       if (res.ok) {
+        console.log('delete => res');
         setRedirect(true);
       }
     } catch (error) {
