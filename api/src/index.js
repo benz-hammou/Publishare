@@ -107,7 +107,7 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
       cover: newPath,
       author: info.id,
     });
-    res.json(postDoc);
+    res.json({postDoc, test: 'ok'});
   });
 });
 
