@@ -107,8 +107,9 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
       cover: newPath,
       author: info.id,
     });
-    res.json({postDoc, test: 'ok'});
+    res.json({postDoc, test: 'ok', info});
   });
+  res.json({test: 'ok'})
 });
 
 // UPDATE POST
