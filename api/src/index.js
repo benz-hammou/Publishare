@@ -17,7 +17,7 @@ const secret = "jlchzihcighipefpzeghp";
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors({ credentials: true, origin: "https://front-gffr.onrender.com" }));
+app.use(cors({ credentials: true, origin: ["https://front-gffr.onrender.com", 'http://localhost:3000'] }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
@@ -96,6 +96,7 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
     res.status(401)
     res.end()
   }
+
   jwt.verify(token, secret, {}, async (err, info) => {
     if (err) throw err;
     const { title, content, summary /* category */ } = req.body;
@@ -107,9 +108,9 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
       cover: newPath,
       author: info.id,
     });
-    res.json({postDoc, test: 'ok', info});
+
+    res.json(postDoc);
   });
-  res.json({test: 'ok'})
 });
 
 // UPDATE POST
@@ -145,7 +146,7 @@ app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
 app.get("/post", async (req, res) => {
   try {
     res.json(
-      await PostModel.find().populate("author").sort({ createAt: -1 }).limit(20)
+      await PostModel.find().populate("author").sort({ createAt: -1 }).limit(99)
     );
   } catch (error) {
     console.log(error);
