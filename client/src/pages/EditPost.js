@@ -13,7 +13,7 @@ const EditPost = () => {
 
   const getEditedContent = async () => {
     try {
-      const res = await fetch(`https://api-7niz.onrender.com/post/${id}`);
+      const res = await fetch(`http://localhost:4000/post/${id}`);
       const data = await res.json();
       const { title, content, summary } = data;
       setTitle(title);

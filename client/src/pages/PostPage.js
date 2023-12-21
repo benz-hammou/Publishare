@@ -13,7 +13,7 @@ const PostPage = () => {
 
   const getPostId = async () => {
     try {
-      const res = await fetch(`https://api-7niz.onrender.com/post/${id}`);
+      const res = await fetch(`http://localhost:4000/post/${id}`);
       const data = await res.json();
       console.log(data);
       return setPostInfo(data);

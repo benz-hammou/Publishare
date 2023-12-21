@@ -9,35 +9,32 @@ const CreatePost = () => {
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
   const [files, setFiles] = useState("");
-  const [redirect, setRedirect] = useState("");
-  // const navigate = useNavigate();
+  // const [redirect, setRedirect] = useState("");
+  const navigate = useNavigate();
 
   const createNewPost = async (e) => {
-    const data = new FormData();
-    data.set("title", title);
-    data.set("summary", summary);
-    data.set("content", content);
-    data.set("file", files[0]);
-    e.preventDefault();
+    try {
+      const data = new FormData();
+      data.set("title", title);
+      data.set("summary", summary);
+      data.set("content", content);
+      data.set("file", files[0]);
+      e.preventDefault();
 
-    const res = await fetch("https://api-7niz.onrender.com/post", {
-      method: "POST",
-      body: data,
-      credentials: "include",
-      mode: "no-cors",
-    });
-    console.log("createPost => res", res);
+      const res = await fetch("http://localhost:4000/post", {
+        method: "POST",
+        body: data,
+        credentials: "include",
+      });
 
-    if (res.ok) {
-      console.log("createPost => res");
-      setRedirect(true);
-      // return navigate("/");
+      if (res.ok) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("Fetche error: The post could not be created, please try again", error);
     }
   };
 
-  if (redirect) {
-    return <Navigate to={"/"} />;
-  }
   return (
     <div className="flex justify-center items-center h-full w-full m-auto">
       <Card

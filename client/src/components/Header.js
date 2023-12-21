@@ -60,7 +60,7 @@ const Header = () => {
   }, [pathname]);
 
   useEffect(() => {
-    fetch("https://api-7niz.onrender.com/profile", {
+    fetch("http://localhost:4000/profile", {
       credentials: "include",
     }).then((res) => {
       res.json().then((userInfo) => {
