@@ -1,33 +1,36 @@
 import { useState } from "react";
 import { Input } from "@material-tailwind/react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [redirect, setRedirect] = useState(false);
+  const navigate = useNavigate();
 
   const register = async (e) => {
-    e.preventDefault();
-    const res = await fetch("https://api-7niz.onrender.com/register", {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
-      headers: { "Content-Type": "application/json" },
-    });
-    console.log('registerPage => res');
-    if (res.status === 200) {
-      alert("Registration successful, profile are create, you can now Login with your Username");
-      const data = await res.json();
-      setRedirect(true);
-      console.log(data);
-    } else {
-      alert("registration failed");
+    try {
+      e.preventDefault();
+      const res = await fetch("https://api-7niz.onrender.com/register", {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.status === 200) {
+        alert("Registration successful, profile are create, you can now Login with your Username");
+        const data = await res.json();
+        navigate("/")
+        console.log(data);
+      } else {
+        alert("registration failed");
+      }
+
+    } catch (error) {
+      console.log(
+        "Fetche error: The profile could not be registred, please try again",
+        error
+      );
     }
   };
-
-  if (redirect) {
-    return <Navigate to={"/"} />;
-  }
 
   return (
     <div>

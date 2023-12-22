@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Card, Input, Typography } from "@material-tailwind/react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Editor from "../components/Editor";
 
 const CreatePost = () => {
@@ -9,7 +9,6 @@ const CreatePost = () => {
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
   const [files, setFiles] = useState("");
-  // const [redirect, setRedirect] = useState("");
   const navigate = useNavigate();
 
   const createNewPost = async (e) => {
@@ -26,12 +25,15 @@ const CreatePost = () => {
         body: data,
         credentials: "include",
       });
-
       if (res.ok) {
         navigate("/");
+        console.log("The post has been created");
       }
     } catch (error) {
-      console.log("Fetche error: The post could not be created, please try again", error);
+      console.log(
+        "Fetche error: The post could not be created, please try again",
+        error
+      );
     }
   };
 

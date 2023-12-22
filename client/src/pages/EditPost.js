@@ -1,6 +1,6 @@
 import { Card, Input, Typography } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Editor from "../components/Editor";
 
 const EditPost = () => {
@@ -9,7 +9,7 @@ const EditPost = () => {
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
   const [files, setFiles] = useState("");
-  const [redirect, setRedirect] = useState(false);
+  const navigate = useNavigate();
 
   const getEditedContent = async () => {
     try {
@@ -20,7 +20,10 @@ const EditPost = () => {
       setContent(content);
       setSummary(summary);
     } catch (error) {
-      console.log("Fetche error: ", error);
+      console.log(
+        "Fetche error: The previous content cannot be obtained.",
+        error
+      );
     }
   };
 
@@ -29,29 +32,32 @@ const EditPost = () => {
   }, []);
 
   const updatePost = async (e) => {
-    e.preventDefault();
-    const data = new FormData();
-    data.set("title", title);
-    data.set("summary", summary);
-    data.set("content", content);
-    data.set("id", id);
-    if (files?.[0]) {
-      data.set("file", files?.[0]);
-    }
-    const res = await fetch("https://api-7niz.onrender.com/post", {
-      method: "PUT",
-      body: data,
-      credentials: "include",
-    });
-    if (res.ok) {
-      console.log('editPost => res');
-      setRedirect(true);
+    try {
+      e.preventDefault();
+      const data = new FormData();
+      data.set("title", title);
+      data.set("summary", summary);
+      data.set("content", content);
+      data.set("id", id);
+      if (files?.[0]) {
+        data.set("file", files?.[0]);
+      }
+      const res = await fetch("https://api-7niz.onrender.com/post", {
+        method: "PUT",
+        body: data,
+        credentials: "include",
+      });
+      if (res.ok) {
+        navigate(`/post/${id}`);
+        console.log("The post has been edited");
+      }
+    } catch (error) {
+      console.log(
+        "Fetche error: The post could not be edited, please try again",
+        error
+      );
     }
   };
-
-  if (redirect) {
-    return <Navigate to={`/post/${id}`} />;
-  }
 
   return (
     <div>

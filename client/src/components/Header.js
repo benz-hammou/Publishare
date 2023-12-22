@@ -70,11 +70,18 @@ const Header = () => {
   }, []);
 
   const logout = () => {
-    fetch("https://api-7niz.onrender.com/logout", {
-      credentials: "include",
-      method: "POST",
-    });
-    setUserInfo(null);
+    try {
+      fetch("https://api-7niz.onrender.com/logout", {
+        credentials: "include",
+        method: "POST",
+      });
+      setUserInfo(null);
+    } catch (error) {
+      console.log(
+        "Fetche error: Logging out is not possible, please try again",
+        error
+      );
+    }
   };
 
   const username = userInfo?.username;

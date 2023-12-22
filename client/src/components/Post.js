@@ -16,10 +16,12 @@ const Post = () => {
     try {
       const res = await fetch("http://localhost:4000/post");
       const data = await res.json();
-      console.log(data);
       return setPosts(data);
     } catch (error) {
-      console.log("Fetche error: ", error);
+      console.log(
+        "Fetche error: The post could not be displayed, please try again.",
+        error
+      );
     }
   };
 

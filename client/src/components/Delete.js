@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import {
   Button,
@@ -11,9 +11,9 @@ import {
 } from "@material-tailwind/react";
 
 const Delete = ({ id }) => {
-  const [redirect, setRedirect] = useState("");
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+  const navigate = useNavigate();
 
   const deletePost = async () => {
     try {
@@ -22,17 +22,16 @@ const Delete = ({ id }) => {
         credentials: "include",
       });
       if (res.ok) {
-        console.log('delete => res');
-        setRedirect(true);
+        navigate("/");
+        console.log("The post has been deleted");
       }
     } catch (error) {
-      console.log("Fetche error: ", error);
+      console.log(
+        "Fetche error: The post could not be deleted, please try again",
+        error
+      );
     }
   };
-
-  if (redirect) {
-    return <Navigate to={"/"} />;
-  }
 
   return (
     <div>

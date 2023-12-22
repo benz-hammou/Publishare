@@ -1,42 +1,42 @@
 import { useState, useContext } from "react";
 import { Input } from "@material-tailwind/react";
-
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "../components/UserContext";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [redirect, setRedirect] = useState(false);
   const { setUserInfo } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const login = async (e) => {
-    e.preventDefault();
-    const res = await fetch("http://localhost:4000/login", {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-    if (res.ok) {
-      console.log('loginPage => res');
-      alert("You are Loged In !")
-      res.json().then((userInfo) => {
-        setUserInfo(userInfo);
-        setRedirect(true);
+    try {
+      e.preventDefault();
+      const res = await fetch("http://localhost:4000/login", {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
       });
-    } else {
-      alert("wrong credentials");
+      if (res.ok) {
+        alert("You are Loged In !");
+        res.json().then((userInfo) => {
+          setUserInfo(userInfo);
+          navigate("/");
+        });
+      } else {
+        alert("wrong credentials");
+      }
+    } catch (error) {
+      console.log(
+        "Fetche error: Logging in is not possible, please try again",
+        error
+      );
     }
   };
 
-  if (redirect) {
-    return <Navigate to={"/"} />;
-  }
-
   return (
     <div>
- 
       <h1 className="w-full flex justify-center mb-10">Login page</h1>
       <form className="flex justify-center" onSubmit={login}>
         <div className="flex flex-col items-center">

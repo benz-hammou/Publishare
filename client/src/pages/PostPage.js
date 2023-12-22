@@ -18,7 +18,10 @@ const PostPage = () => {
       console.log(data);
       return setPostInfo(data);
     } catch (error) {
-      console.log("Fetche error: ", error);
+      console.log(
+        "Fetche error: Your post cannot be displayed.",
+        error
+      );
     }
   };
 
