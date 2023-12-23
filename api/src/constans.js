@@ -1,7 +1,11 @@
-exports.constants = {
-    VALIDATION_ERROR: 400,
-    UNAUTORIZED: 401,
-    FORBIDDEN: 403,
-    NOT_FOUND: 404,
-    SERVER_ERROR: 500
-}
+const ERROR_CODES = {
+  VALIDATION_ERROR: 400,
+  UNAUTORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  SERVER_ERROR: 500,
+};
+
+module.exports = {
+  ERROR_CODES,
+};

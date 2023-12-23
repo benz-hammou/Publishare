@@ -16,6 +16,7 @@ import {
   ListItem,
   Typography,
 } from "@material-tailwind/react";
+import { API_BASE_URL } from "../constants";
 
 const accordionData = [
   {
@@ -60,7 +61,7 @@ const Header = () => {
   }, [pathname]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/profile", {
+    fetch(`${API_BASE_URL}/profile`, {
       credentials: "include",
     }).then((res) => {
       res.json().then((userInfo) => {
@@ -71,7 +72,7 @@ const Header = () => {
 
   const logout = () => {
     try {
-      fetch("https://api-7niz.onrender.com/logout", {
+      fetch(`${API_BASE_URL}/logout`, {
         credentials: "include",
         method: "POST",
       });

@@ -2,6 +2,7 @@ import { Card, Input, Typography } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Editor from "../components/Editor";
+import { API_BASE_URL } from "../constants";
 
 const EditPost = () => {
   const { id } = useParams();
@@ -12,8 +13,8 @@ const EditPost = () => {
   const navigate = useNavigate();
 
   const getEditedContent = async () => {
-    try {
-      const res = await fetch(`http://localhost:4000/post/${id}`);
+    try { 
+      const res = await fetch(`${API_BASE_URL}/post/${id}`); 
       const data = await res.json();
       const { title, content, summary } = data;
       setTitle(title);
@@ -42,7 +43,7 @@ const EditPost = () => {
       if (files?.[0]) {
         data.set("file", files?.[0]);
       }
-      const res = await fetch("https://api-7niz.onrender.com/post", {
+      const res = await fetch(`${API_BASE_URL}/post`, {
         method: "PUT",
         body: data,
         credentials: "include",

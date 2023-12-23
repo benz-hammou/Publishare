@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Input } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../constants";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
@@ -10,7 +11,7 @@ const RegisterPage = () => {
   const register = async (e) => {
     try {
       e.preventDefault();
-      const res = await fetch("https://api-7niz.onrender.com/register", {
+      const res = await fetch(`${API_BASE_URL}/register`, {
         method: "POST",
         body: JSON.stringify({ username, password }),
         headers: { "Content-Type": "application/json" },

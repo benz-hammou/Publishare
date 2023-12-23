@@ -9,6 +9,7 @@ import {
   DialogFooter,
   Typography,
 } from "@material-tailwind/react";
+import { API_BASE_URL } from "../constants";
 
 const Delete = ({ id }) => {
   const [open, setOpen] = useState(false);
@@ -17,7 +18,7 @@ const Delete = ({ id }) => {
 
   const deletePost = async () => {
     try {
-      const res = await fetch(`http://localhost:4000/post/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/post/${id}`, {
         method: "DELETE",
         credentials: "include",
       });

@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { UserContext } from "../components/UserContext";
 import Delete from "../components/Delete";
+import { API_BASE_URL } from "../constants";
 
 const PostPage = () => {
   const [postInfo, setPostInfo] = useState(null);
@@ -13,7 +14,8 @@ const PostPage = () => {
 
   const getPostId = async () => {
     try {
-      const res = await fetch(`http://localhost:4000/post/${id}`);
+      
+      const res = await fetch(`${API_BASE_URL}/post/${id}`);
       const data = await res.json();
       console.log(data);
       return setPostInfo(data);
@@ -39,7 +41,7 @@ const PostPage = () => {
       <div className=" flex justify-center items-center rounded-xl overflow-hidden mb-8 max-h-50vh lg:w-full">
         <img
           className=" aspect-11/8 object-cover object-center lg:w-full"
-          src={`https://api-7niz.onrender.com/${cover}`}
+          src={`${API_BASE_URL}/${cover}`}
           alt=""
         />
       </div>
