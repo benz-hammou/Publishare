@@ -3,6 +3,7 @@ import "react-quill/dist/quill.snow.css";
 import { Card, Input, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import Editor from "../components/Editor";
+import { API_BASE_URL } from "../constants";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -20,7 +21,7 @@ const CreatePost = () => {
       data.set("file", files[0]);
       e.preventDefault();
 
-      const res = await fetch("http://localhost:4000/post", {
+      const res = await fetch(`${API_BASE_URL}/post`, {
         method: "POST",
         body: data,
         credentials: "include",

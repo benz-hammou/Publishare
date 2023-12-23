@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { Input } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../components/UserContext";
+import { API_BASE_URL } from "../constants";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -12,7 +13,7 @@ const LoginPage = () => {
   const login = async (e) => {
     try {
       e.preventDefault();
-      const res = await fetch("http://localhost:4000/login", {
+      const res = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         body: JSON.stringify({ username, password }),
         headers: { "Content-Type": "application/json" },
