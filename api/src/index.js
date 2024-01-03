@@ -1,30 +1,26 @@
 const express = require("express");
 const cors = require("cors");
-const connectDb = require("../config/dbConnect")
+const connectDb = require("../config/dbConnect");
 const user = require("../models/user");
 const post = require("../models/post");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const multer = require("multer");
-const uploadMiddleware = multer({ dest: 'uploads/' });
-const fs = require("fs");
+const imageService = require("./services/imagesService");
 const PostModel = require("../models/post");
-const path = require('path')
-
 const salt = bcrypt.genSaltSync(10);
 const secret = "jlchzihcighipefpzeghp";
-
-connectDb()
+connectDb();
 const app = express();
 const PORT = process.env.PORT || 4000;
-
-app.use(cors({ credentials: true, origin: ["https://front-gffr.onrender.com", 'http://localhost:3000'] }));
+app.use(
+  cors({
+    credentials: true,
+    origin: ["https://front-gffr.onrender.com", "http://localhost:3000"],
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
-
-
 
 // REGISTER USER
 app.post("/register", async (req, res) => {
@@ -54,7 +50,7 @@ app.post("/login", async (req, res) => {
       jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
         if (err) throw err;
 
-        res.cookie("token", token, {sameSite: "none", secure: true}).json({
+        res.cookie("token", token, { sameSite: "none", secure: true }).json({
           id: userDoc._id,
           username,
         });
@@ -82,28 +78,23 @@ app.post("/logout", (req, res) => {
 });
 
 // CREATE NEW POST
-app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
-  const { originalname, path } = req.file;
-  const parts = originalname.split(".");
-  const ext = parts[parts.length - 1];
-  const newPath = path + "." + ext;
-  fs.renameSync(path, newPath);
-
+app.post("/post", async (req, res) => {
   const { token } = req.cookies;
   if (!token) {
-    res.status(401)
-    res.end()
+    res.status(401);
+    res.end();
   }
 
   jwt.verify(token, secret, {}, async (err, info) => {
     if (err) throw err;
-    const { title, content, summary /* category */ } = req.body;
+    const { title, content, summary, file, filename /* category */ } = req.body;
+    const imageRespons = await imageService.upload(filename, file);
     const postDoc = await post.create({
       title,
       content,
       summary,
       // category,
-      cover: newPath,
+      cover: imageRespons,
       author: info.id,
     });
 
@@ -112,21 +103,18 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
 });
 
 // UPDATE POST
-app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
-  let newPath = null;
-  if (req.file) {
-    const { originalname, path } = req.file;
-    const parts = originalname.split(".");
-    const ext = parts[parts.length - 1];
-    newPath = path + "." + ext;
-    fs.renameSync(path, newPath);
-  }
-
+app.put("/post", async (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, secret, {}, async (err, info) => {
     if (err) throw err;
-    const { id, title, summary, content } = req.body;
+    const { id, title, summary, content, file, filename } = req.body;
     const postDoc = await post.findById(id);
+    let imageRespons;
+    if (file) {
+      imageRespons = await imageService.upload(filename, file);
+      await imageService.remove(postDoc.cover.split("/")[4]);
+    }
+
     const isAutor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
     if (!isAutor) {
       return res.status(400).json("you are not the author");
@@ -135,7 +123,7 @@ app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
       title,
       summary,
       content,
-      cover: newPath ? newPath : postDoc.cover,
+      cover: imageRespons ? imageRespons : postDoc.cover,
     });
     res.json(postDoc);
   });
@@ -162,6 +150,8 @@ app.get("/post/:id", async (req, res) => {
 // DELETE POST
 app.delete("/post/:id", async (req, res) => {
   const { id } = req.params;
+  const postDoc = await post.findById(id);
+  await imageService.remove(postDoc.cover.split("/")[4]);
   await post.deleteOne({ _id: id });
   res.end();
 });
