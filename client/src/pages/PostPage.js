@@ -14,7 +14,6 @@ const PostPage = () => {
 
   const getPostId = async () => {
     try {
-      
       const res = await fetch(`${API_BASE_URL}/post/${id}`);
       const data = await res.json();
       console.log(data);
@@ -41,7 +40,7 @@ const PostPage = () => {
       <div className=" flex justify-center items-center rounded-xl overflow-hidden mb-8 max-h-50vh lg:w-full">
         <img
           className=" aspect-11/8 object-cover object-center lg:w-full"
-          src={`${API_BASE_URL}/${cover}`}
+          src={cover}
           alt=""
         />
       </div>

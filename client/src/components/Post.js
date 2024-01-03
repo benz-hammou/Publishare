@@ -50,7 +50,7 @@ const Post = () => {
                 >
                   <Link to={`/post/${_id}`}>
                     <img
-                      src={`${API_BASE_URL}/${cover}`}
+                      src={cover}
                       alt=""
                       className="h-full w-full object-cover"
                     />

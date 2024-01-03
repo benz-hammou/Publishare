@@ -12,14 +12,27 @@ const CreatePost = () => {
   const [files, setFiles] = useState("");
   const navigate = useNavigate();
 
+  const convertToBase64 = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+    });
+  };
+
   const createNewPost = async (e) => {
+    e.preventDefault();
     try {
+      const convertedFile = await convertToBase64(files[0]);
+
       const data = new FormData();
       data.set("title", title);
       data.set("summary", summary);
       data.set("content", content);
-      data.set("file", files[0]);
-      e.preventDefault();
+      data.set("file", convertedFile);
+      data.set("filename", files[0].name );
 
       const res = await fetch(`${API_BASE_URL}/post`, {
         method: "POST",

@@ -12,9 +12,19 @@ const EditPost = () => {
   const [files, setFiles] = useState("");
   const navigate = useNavigate();
 
+  const convertToBase64 = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+    });
+  };
+
   const getEditedContent = async () => {
-    try { 
-      const res = await fetch(`${API_BASE_URL}/post/${id}`); 
+    try {
+      const res = await fetch(`${API_BASE_URL}/post/${id}`);
       const data = await res.json();
       const { title, content, summary } = data;
       setTitle(title);
@@ -33,16 +43,19 @@ const EditPost = () => {
   }, []);
 
   const updatePost = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
+      const convertedFile = await convertToBase64(files[0]);
       const data = new FormData();
       data.set("title", title);
       data.set("summary", summary);
       data.set("content", content);
       data.set("id", id);
-      if (files?.[0]) {
-        data.set("file", files?.[0]);
+      if (files?.[0].name) {
+        data.set("file", convertedFile);
+        data.set("filename", files?.[0].name);
       }
+
       const res = await fetch(`${API_BASE_URL}/post`, {
         method: "PUT",
         body: data,
