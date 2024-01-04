@@ -6,13 +6,18 @@ const post = require("../models/post");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+var multer = require("multer");
+var upload = multer();
 const imageService = require("./services/imagesService");
 const PostModel = require("../models/post");
+
 const salt = bcrypt.genSaltSync(10);
 const secret = "jlchzihcighipefpzeghp";
+
 connectDb();
 const app = express();
 const PORT = process.env.PORT || 4000;
+
 app.use(
   cors({
     credentials: true,
@@ -21,6 +26,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use(upload.array());
 
 // REGISTER USER
 app.post("/register", async (req, res) => {
@@ -89,6 +95,8 @@ app.post("/post", async (req, res) => {
     if (err) throw err;
     const { title, content, summary, file, filename /* category */ } = req.body;
     const imageRespons = await imageService.upload(filename, file);
+    console.log(imageRespons);
+    console.log("sdsvev", req.body);
     const postDoc = await post.create({
       title,
       content,
@@ -109,10 +117,11 @@ app.put("/post", async (req, res) => {
     if (err) throw err;
     const { id, title, summary, content, file, filename } = req.body;
     const postDoc = await post.findById(id);
+
     let imageRespons;
     if (file) {
       imageRespons = await imageService.upload(filename, file);
-      await imageService.remove(postDoc.cover.split("/")[4]);
+      await imageService.remove(postDoc.cover.split('/')[4])
     }
 
     const isAutor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
@@ -151,7 +160,7 @@ app.get("/post/:id", async (req, res) => {
 app.delete("/post/:id", async (req, res) => {
   const { id } = req.params;
   const postDoc = await post.findById(id);
-  await imageService.remove(postDoc.cover.split("/")[4]);
+  await imageService.remove(postDoc.cover.split('/')[4])
   await post.deleteOne({ _id: id });
   res.end();
 });
