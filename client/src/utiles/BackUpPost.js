@@ -6,7 +6,7 @@ const BackUpPost = () => {
       <div className="article_cards max-h-maxOneThirdScreen md:flex-row xl:h-maxOneThirdScreen">
         <div className="img_cards_container md:mb-0 md:min-w-40% ">
           <img
-            src="https://media.istockphoto.com/id/813136942/photo/selective-focus-of-stacking-magazine-place-on-table-in-living-room.jpg?s=612x612&w=0&k=20&c=6nRlgDo9ecsb1vCPlN8G4cmq4vf8lW4YkSMhoU-jSqE="
+            src=" "
             alt="desk"
             className=" aspect-21/6 md:aspect-16/13 lg:aspect-4/3 xl:aspect-auto"
           />
@@ -31,7 +31,7 @@ const BackUpPost = () => {
       <div className="article_cards max-h-maxOneThirdScreen md:flex-row xl:h-oneThirdScreen">
         <div className="img_cards_container md:mb-0 md:min-w-40%">
           <img
-            src="https://techcrunch.com/wp-content/uploads/2022/10/GettyImages-1242979336.jpg?w=1390&crop=1"
+            src=" "
             alt="money"
             className=" aspect-21/6 md:aspect-16/13 lg:aspect-4/3 xl:aspect-auto"
           />
@@ -55,7 +55,7 @@ const BackUpPost = () => {
       <div className="article_cards max-h-maxOneThirdScreen md:flex-row xl:h-maxOneThirdScreen">
         <div className="img_cards_container md:mb-0 md:min-w-40%">
           <img
-            src="https://iamafoodblog.b-cdn.net/wp-content/uploads/2019/11/oven-baked-perfect-tonkatsu-8822.jpg"
+            src=" "
             alt="food dish"
             className=" aspect-21/6 md:aspect-16/13 lg:aspect-4/3 xl:aspect-auto"
           />
@@ -82,7 +82,7 @@ const BackUpPost = () => {
       <div className="article_cards max-h-maxOneThirdScreen md:flex-row xl:h-maxOneThirdScreen">
         <div className="img_cards_container md:mb-0 md:min-w-40%">
           <img
-            src="https://www.myglobalviewpoint.com/wp-content/uploads/2020/02/A-Day-in-Dozza-Italy-585x398.jpg"
+            src=" "
             alt="medieval city"
             className=" aspect-21/6 md:aspect-16/13 lg:aspect-4/3 xl:aspect-auto"
           />
