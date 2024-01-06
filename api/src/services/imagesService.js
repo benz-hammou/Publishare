@@ -30,6 +30,7 @@ async function upload(imageName, base64Image, type) {
 
   try {
     data = await promiseUpload(params);
+
   } catch (err) {
     console.error(err);
     return "";
@@ -40,6 +41,7 @@ async function upload(imageName, base64Image, type) {
 
 async function remove(imageName) {
   var params = { Bucket: `${BUCKET_NAME}/images`, Key: imageName };
+  console.log(imageName);
   try {
     await promiseDelete(params);
   } catch (err) {
@@ -68,6 +70,7 @@ function promiseUpload(params) {
 function promiseDelete(params) {
   return new Promise(function (resolve, reject) {
     s3.deleteObject(params, function (err, data) {
+      console.log(params);
       if (err) {
         console.log(err);
         reject(err);

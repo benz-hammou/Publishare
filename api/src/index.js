@@ -95,8 +95,6 @@ app.post("/post", async (req, res) => {
     if (err) throw err;
     const { title, content, summary, file, filename /* category */ } = req.body;
     const imageRespons = await imageService.upload(filename, file);
-    console.log(imageRespons);
-    console.log("sdsvev", req.body);
     const postDoc = await post.create({
       title,
       content,
@@ -117,11 +115,11 @@ app.put("/post", async (req, res) => {
     if (err) throw err;
     const { id, title, summary, content, file, filename } = req.body;
     const postDoc = await post.findById(id);
-
+    const coverName = postDoc.cover.split("/")[4];
     let imageRespons;
     if (file) {
       imageRespons = await imageService.upload(filename, file);
-      await imageService.remove(postDoc.cover.split('/')[4])
+      await imageService.remove(coverName);
     }
 
     const isAutor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
@@ -160,7 +158,8 @@ app.get("/post/:id", async (req, res) => {
 app.delete("/post/:id", async (req, res) => {
   const { id } = req.params;
   const postDoc = await post.findById(id);
-  await imageService.remove(postDoc.cover.split('/')[4])
+  const coverName = postDoc.cover.split("/")[4];
+  await imageService.remove(coverName);
   await post.deleteOne({ _id: id });
   res.end();
 });
