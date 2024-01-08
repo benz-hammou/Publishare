@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { format } from "date-fns";
 import {
   Card,
@@ -8,35 +8,16 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import { API_BASE_URL } from "../constants";
 
-const Post = () => {
-  const [posts, setPosts] = useState([]);
-
-  const getPosts = async () => {
-    try {
-      const res = await fetch(`${API_BASE_URL}/post`);
-      const data = await res.json();
-      return setPosts(data);
-    } catch (error) {
-      console.log(
-        "Fetche error: The post could not be displayed, please try again.",
-        error
-      );
-    }
-  };
-
-  useEffect(() => {
-    getPosts();
-  }, []);
-
+const Post = ({ posts }) => {
   return (
     <>
       {posts.length > 0 &&
         posts
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
           .map((post) => {
-            const { title, summary, cover, createdAt, author, _id } = post;
+            const { title, summary, cover, createdAt, author, _id, category } =
+              post;
 
             return (
               <Card
@@ -62,7 +43,7 @@ const Post = () => {
                     color="deep-orange"
                     className="mb-1 uppercase"
                   >
-                    travel
+                    {category}
                   </Typography>
                   <Typography
                     variant="h4"

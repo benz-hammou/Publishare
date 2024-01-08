@@ -37,6 +37,9 @@ module.exports = withMT({
       },
       minWidth: {
         "6rem": "6rem",
+        "7rem": "7rem",
+        "8rem": "8rem",
+        "9rem": "9rem",
         "40%": "40%",
         "50%": "50%",
         "55%": "55%",

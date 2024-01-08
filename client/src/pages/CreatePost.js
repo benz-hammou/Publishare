@@ -1,15 +1,24 @@
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
-import { Card, Input, Typography } from "@material-tailwind/react";
+import {
+  Card,
+  Input,
+  Typography,
+  Select,
+  Option,
+} from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import Editor from "../components/Editor";
+import categoriesData from "../data/CategoriesData";
 import { API_BASE_URL } from "../constants";
 
-const CreatePost = () => {
+const CreatePost = ({ getPosts }) => {
   const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
   const [files, setFiles] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const convertToBase64 = (file) => {
@@ -25,14 +34,15 @@ const CreatePost = () => {
   const createNewPost = async (e) => {
     e.preventDefault();
     try {
+      setIsLoading(true);
       const convertedFile = await convertToBase64(files[0]);
-
       const data = new FormData();
       data.set("title", title);
+      data.set("category", category);
       data.set("summary", summary);
       data.set("content", content);
       data.set("file", convertedFile);
-      data.set("filename", files[0].name );
+      data.set("filename", files[0].name);
 
       const res = await fetch(`${API_BASE_URL}/post`, {
         method: "POST",
@@ -40,6 +50,7 @@ const CreatePost = () => {
         credentials: "include",
       });
       if (res.ok) {
+        await getPosts();
         navigate("/");
         console.log("The post has been created");
       }
@@ -48,8 +59,11 @@ const CreatePost = () => {
         "Fetche error: The post could not be created, please try again",
         error
       );
+    } finally {
+      setIsLoading(false);
     }
   };
+  console.log(category);
 
   return (
     <div className="flex justify-center items-center h-full w-full m-auto">
@@ -62,6 +76,7 @@ const CreatePost = () => {
           className="mb-6 flex justify-center"
           variant="h4"
           color="blue-gray"
+          disabled={isLoading}
         >
           Publish somethings !
         </Typography>
@@ -74,6 +89,23 @@ const CreatePost = () => {
               onChange={(e) => setTitle(e.target.value)}
             />
             <input type="file" onChange={(e) => setFiles(e.target.files)} />
+
+            <div className="flex w-72 flex-col gap-6">
+              <Select
+                color="deep-orange"
+                label="Category"
+                onChange={setCategory}
+              >
+                {categoriesData.map((cat) => {
+                  return (
+                    <Option id={cat.key} value={cat.name}>
+                      {cat.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </div>
+
             <Input
               color="deep-orange"
               size="lg"

@@ -7,7 +7,7 @@ import { UserContext } from "../components/UserContext";
 import Delete from "../components/Delete";
 import { API_BASE_URL } from "../constants";
 
-const PostPage = () => {
+const PostPage = ({getPosts}) => {
   const [postInfo, setPostInfo] = useState(null);
   const { userInfo } = useContext(UserContext);
   const { id } = useParams();
@@ -62,7 +62,7 @@ const PostPage = () => {
         </div>
         {userInfo?.id === author?._id && (
           <div className="flex ml-4">
-            <Delete id={id} />
+            <Delete id={id} getPosts={getPosts}/>
 
             <Link to={`/edit/${_id}`}>
               <PencilSquareIcon className="h-6 w-6 ml-2 text-deep-orange-300 hover:scale-150" />

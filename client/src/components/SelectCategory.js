@@ -1,0 +1,111 @@
+import React from "react";
+import { format } from "date-fns";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Typography,
+  Button,
+} from "@material-tailwind/react";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import categoriesData from "../data/CategoriesData";
+
+const SelectCategory = ({ posts }) => {
+  let { id } = useParams();
+  const chosenCategory = categoriesData.find((el) => el.key === id) || {};
+
+  return (
+    <div>
+      {posts
+        .filter((post) => {
+          console.log(post.category);
+          return post.category && post.category === chosenCategory?.name;
+        })
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .map((post) => {
+          const { title, summary, cover, createdAt, author, _id, category } =
+            post;
+
+          return (
+            <Card
+              key={_id}
+              className="w-full mb-5 shadow-shadowPost md:h-oneThirdScreen md:flex-row md:overflow-hidden"
+            >
+              <CardHeader
+                shadow={false}
+                floated={false}
+                className=" flex justify-center items-center m-0 w-full relative h-56 shrink-0 rounded-b-none md:rounded-r-none md:w-1/2 md:h-full"
+              >
+                <Link to={`/post/${_id}`}>
+                  <img
+                    src={cover}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                </Link>
+              </CardHeader>
+              <CardBody className="py-3">
+                <Typography
+                  variant="h6"
+                  color="deep-orange"
+                  className="mb-1 uppercase"
+                >
+                  {category}
+                </Typography>
+                <Typography
+                  variant="h4"
+                  color="blue-gray"
+                  className="md:max-h-16 md:overflow-hidden mb-3"
+                >
+                  <Link to={`/post/${_id}`}>{title}</Link>
+                </Typography>
+                <Typography
+                  variant="paragraph"
+                  color="blue-gray"
+                  className="info mb-1"
+                >
+                  <a href className="autor font-semibold mr-2">
+                    {author.username}
+                  </a>
+                  <time>{format(new Date(createdAt), "d LLL y - HH:mm")}</time>
+                </Typography>
+                <Typography
+                  color="gray"
+                  className="mb-4 font-normal md:max-h-14 md:overflow-hidden md:mb-2 lg:max-h-24 lg:mb-4 xl:overflow-visible xl:mb-8"
+                >
+                  {summary}
+                </Typography>
+                <div>
+                  <Link to={`/post/${_id}`} className="inline-block">
+                    <Button
+                      variant="text"
+                      className="flex items-center gap-2 text-amber-900  hover:bg-orange-100"
+                    >
+                      Read More
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        className="h-4 w-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+                        />
+                      </svg>
+                    </Button>
+                  </Link>
+                </div>
+              </CardBody>
+            </Card>
+          );
+        })}
+    </div>
+  );
+};
+
+export default SelectCategory;

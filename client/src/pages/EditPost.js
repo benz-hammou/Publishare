@@ -1,15 +1,24 @@
-import { Card, Input, Typography } from "@material-tailwind/react";
+import {
+  Card,
+  Input,
+  Typography,
+  Select,
+  Option,
+} from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Editor from "../components/Editor";
+import categoriesData from "../data/CategoriesData";
 import { API_BASE_URL } from "../constants";
 
-const EditPost = () => {
+const EditPost = ({ getPosts }) => {
   const { id } = useParams();
   const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
   const [files, setFiles] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const convertToBase64 = (file) => {
@@ -26,10 +35,11 @@ const EditPost = () => {
     try {
       const res = await fetch(`${API_BASE_URL}/post/${id}`);
       const data = await res.json();
-      const { title, content, summary } = data;
+      const { title, content, summary, category } = data;
       setTitle(title);
       setContent(content);
       setSummary(summary);
+      setCategory(category);
     } catch (error) {
       console.log(
         "Fetche error: The previous content cannot be obtained.",
@@ -45,13 +55,15 @@ const EditPost = () => {
   const updatePost = async (e) => {
     e.preventDefault();
     try {
-      const convertedFile = await convertToBase64(files[0]);
+      setIsLoading(true);
       const data = new FormData();
       data.set("title", title);
+      data.set("category", category);
       data.set("summary", summary);
       data.set("content", content);
       data.set("id", id);
-      if (files?.[0].name) {
+      if (files?.[0]?.name) {
+        const convertedFile = await convertToBase64(files[0]);
         data.set("file", convertedFile);
         data.set("filename", files?.[0].name);
       }
@@ -62,6 +74,7 @@ const EditPost = () => {
         credentials: "include",
       });
       if (res.ok) {
+        await getPosts();
         navigate(`/post/${id}`);
         console.log("The post has been edited");
       }
@@ -70,6 +83,8 @@ const EditPost = () => {
         "Fetche error: The post could not be edited, please try again",
         error
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -85,6 +100,7 @@ const EditPost = () => {
             className="mb-6 flex justify-center"
             variant="h4"
             color="blue-gray"
+            disabled={isLoading}
           >
             Update somethings !
           </Typography>
@@ -98,6 +114,24 @@ const EditPost = () => {
                 onChange={(e) => setTitle(e.target.value)}
               />
               <input type="file" onChange={(e) => setFiles(e.target.files)} />
+
+              <div className="flex w-72 flex-col gap-6">
+                <Select
+                  color="deep-orange"
+                  label="Category"
+                  onChange={setCategory}
+                  value={category}
+                >
+                  {categoriesData.map((cat) => {
+                    return (
+                      <Option id={cat.key} value={cat.name}>
+                        {cat.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </div>
+
               <Input
                 color="deep-orange"
                 size="lg"

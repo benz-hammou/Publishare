@@ -11,18 +11,21 @@ import {
 } from "@material-tailwind/react";
 import { API_BASE_URL } from "../constants";
 
-const Delete = ({ id }) => {
+const Delete = ({ id, getPosts  }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const deletePost = async () => {
     try {
+      setIsLoading(true);
       const res = await fetch(`${API_BASE_URL}/post/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
       if (res.ok) {
+        await getPosts();
         navigate("/");
         console.log("The post has been deleted");
       }
@@ -31,6 +34,8 @@ const Delete = ({ id }) => {
         "Fetche error: The post could not be deleted, please try again",
         error
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -60,6 +65,7 @@ const Delete = ({ id }) => {
           <Button
             className="bg-red-700 hover:shadow-lg hover:shadow-red-700/50"
             onClick={deletePost}
+            disabled={isLoading}
           >
             DELETE
           </Button>

@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import OutsideClickHandler from "react-outside-click-handler";
+import categoriesData from "../data/CategoriesData";
 import {
   ChevronDoubleRightIcon,
   ChevronDoubleDownIcon,
@@ -17,33 +18,6 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { API_BASE_URL } from "../constants";
-
-const accordionData = [
-  {
-    key: 1,
-    cat: "Startups",
-  },
-  {
-    key: 2,
-    cat: "Economy",
-  },
-  {
-    key: 3,
-    cat: "Technology",
-  },
-  {
-    key: 4,
-    cat: "Travel",
-  },
-  {
-    key: 5,
-    cat: "Design",
-  },
-  {
-    key: 6,
-    cat: "Food",
-  },
-];
 
 const Header = () => {
   const { setUserInfo, userInfo } = useContext(UserContext);
@@ -88,7 +62,7 @@ const Header = () => {
   const username = userInfo?.username;
 
   const navList = (
-    <List className="navList mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-4 xl:gap-6">
+    <List className="navList mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
       <button type="button">
         <Typography
           className=" lg:hidden flex items-center font-bold hover:text-deep-orange-400"
@@ -103,18 +77,18 @@ const Header = () => {
         </Typography>
       </button>
 
-      {accordionData.map((title) => {
+      {categoriesData.map((title) => {
         return (
           <ListItem
             id={title.key}
             variant="small"
             color="blue-gray"
-            className={`  p-2 font-normal hover:text-orange-600 hover:font-bold xl:flex xl:justify-center xl:items-center xl:hover:bg-orange-600 xl:hover:text-blue-gray-900  ${
+            className={`  p-2 font-normal hover:text-orange-600 lg:min-w-7rem lg:flex lg:justify-center lg:items-center xl:px-5 ${
               isActive ? "block" : "hidden"
             } lg:block`}
           >
-            <a href className="flex items-center xl:font-bold xl:uppercase">
-              {title.cat}
+            <a href className="flex justify-center items-center lg:font-bold lg:uppercase">
+              <Link to={`/category/${title.key}`}>{title.name}</Link>
             </a>
           </ListItem>
         );
@@ -125,7 +99,7 @@ const Header = () => {
           <ListItem
             variant="small"
             color="blue-gray"
-            className="p-2 font-normal lg:min-w-6rem lg:bg-gray-300 lg:hover:bg-gray-300 lg:drop-shadow-2xl lg:hover:scale-125 lg:hover:animate-spin"
+            className="p-2 font-normal lg:flex lg:justify-center lg:min-w-6rem lg:bg-gray-300 lg:hover:bg-gray-300 lg:drop-shadow-2xl lg:hover:scale-125 lg:hover:animate-spin"
           >
             <Link
               to={"/create"}
@@ -144,7 +118,7 @@ const Header = () => {
           <ListItem
             variant="small"
             color="blue-gray"
-            className="p-2 font-normal lg:flex lg:justify-center lg:min-w-6rem hover:text-deep-orange-400"
+            className="p-2 font-normal lg:flex lg:justify-center lg:min-w-6rem text-red-700 hover:text-red-700 hover:bg-gray-300"
           >
             <a
               href
@@ -204,9 +178,9 @@ const Header = () => {
       >
         <Navbar className="navbar bg-opacity-50 fixed top-0 z-10 h-max rounded-none p-4 lg:px-8 lg:py-4 lg:max-w-5xl xl:max-w-7xl lg:shadow-none">
           <div className="flex items-center justify-between lg:justify-center text-blue-gray-900">
-            <Link to="/">
+            <Link to="/" className=" lg:min-w-9rem">
               <img
-                className="h-12 lg:mr-8"
+                className="h-12"
                 src={MyLogo}
                 alt="Publishare Logo"
               />
