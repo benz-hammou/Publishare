@@ -93,13 +93,13 @@ app.post("/post", async (req, res) => {
 
   jwt.verify(token, secret, {}, async (err, info) => {
     if (err) throw err;
-    const { title, content, summary, file, filename /* category */ } = req.body;
+    const { title, content, summary, file, filename, category  } = req.body;
     const imageRespons = await imageService.upload(filename, file);
     const postDoc = await post.create({
       title,
       content,
       summary,
-      // category,
+      category,
       cover: imageRespons,
       author: info.id,
     });
@@ -113,7 +113,7 @@ app.put("/post", async (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, secret, {}, async (err, info) => {
     if (err) throw err;
-    const { id, title, summary, content, file, filename } = req.body;
+    const { id, title, summary, content, file, filename, category } = req.body;
     const postDoc = await post.findById(id);
     const coverName = postDoc.cover.split("/")[4];
     let imageRespons;
@@ -128,6 +128,7 @@ app.put("/post", async (req, res) => {
     }
     await postDoc.updateOne({
       title,
+      category,
       summary,
       content,
       cover: imageRespons ? imageRespons : postDoc.cover,
