@@ -35,14 +35,17 @@ const CreatePost = ({ getPosts }) => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const convertedFile = await convertToBase64(files[0]);
       const data = new FormData();
       data.set("title", title);
       data.set("category", category);
       data.set("summary", summary);
       data.set("content", content);
-      data.set("file", convertedFile);
-      data.set("filename", files[0].name);
+
+      if (files?.[0]?.name) {
+        const convertedFile = await convertToBase64(files[0]);
+        data.set("file", convertedFile);
+        data.set("filename", files?.[0].name);
+      }
 
       const res = await fetch(`${API_BASE_URL}/post`, {
         method: "POST",
