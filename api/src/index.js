@@ -7,7 +7,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 var multer = require("multer");
-var upload = multer();
+var upload = multer({
+  limits: {
+    fieldNameSize: 25 * 1024 * 1024,
+    fieldSize: 25 * 1024 * 1024,
+  },
+});
 const imageService = require("./services/imagesService");
 const PostModel = require("../models/post");
 
@@ -85,27 +90,30 @@ app.post("/logout", (req, res) => {
 
 // CREATE NEW POST
 app.post("/post", async (req, res) => {
-  const { token } = req.cookies;
-  if (!token) {
-    res.status(401);
-    res.end();
-  }
+  try {
+    const { token } = req.cookies;
+    if (!token) {
+      res.status(401);
+      res.end();
+    }
+    jwt.verify(token, secret, {}, async (err, info) => {
+      if (err) throw err;
+      const { title, content, summary, file, filename, category } = req.body;
+      const imageRespons = await imageService.upload(filename, file);
+      const postDoc = await post.create({
+        title,
+        content,
+        summary,
+        category,
+        cover: imageRespons,
+        author: info.id,
+      });
 
-  jwt.verify(token, secret, {}, async (err, info) => {
-    if (err) throw err;
-    const { title, content, summary, file, filename, category  } = req.body;
-    const imageRespons = await imageService.upload(filename, file);
-    const postDoc = await post.create({
-      title,
-      content,
-      summary,
-      category,
-      cover: imageRespons,
-      author: info.id,
+      res.json(postDoc);
     });
-
-    res.json(postDoc);
-  });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // UPDATE POST
