@@ -100,7 +100,6 @@ const EditPost = ({ getPosts }) => {
             className="mb-6 flex justify-center"
             variant="h4"
             color="blue-gray"
-            disabled={isLoading}
           >
             Update somethings !
           </Typography>
@@ -141,7 +140,9 @@ const EditPost = ({ getPosts }) => {
               />
               <Editor onChange={setContent} value={content} />
             </div>
-            <button className="btn_submit w-full mb-8">Update Post</button>
+            <button className="btn_submit w-full mb-8" disabled={isLoading}>
+              Update Post
+            </button>
           </form>
         </Card>
       </div>

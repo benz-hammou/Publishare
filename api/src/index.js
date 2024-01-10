@@ -85,7 +85,7 @@ app.get("/profile", (req, res) => {
 
 // LOGOUT USER
 app.post("/logout", (req, res) => {
-  res.clearCookie("token").json("ok");
+  res.clearCookie("token", { sameSite: "none", secure: true }).json("ok");
 });
 
 // CREATE NEW POST

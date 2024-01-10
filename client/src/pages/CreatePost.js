@@ -66,7 +66,6 @@ const CreatePost = ({ getPosts }) => {
       setIsLoading(false);
     }
   };
-  console.log(category);
 
   return (
     <div className="flex justify-center items-center h-full w-full m-auto">
@@ -79,7 +78,6 @@ const CreatePost = ({ getPosts }) => {
           className="mb-6 flex justify-center"
           variant="h4"
           color="blue-gray"
-          disabled={isLoading}
         >
           Publish somethings !
         </Typography>
@@ -117,7 +115,9 @@ const CreatePost = ({ getPosts }) => {
             />
             <Editor onChange={setContent} value={content} />
           </div>
-          <button className="btn_submit w-full mb-8">Publish</button>
+          <button className="btn_submit w-full mb-8" disabled={isLoading}>
+            Publish
+          </button>
         </form>
       </Card>
     </div>
