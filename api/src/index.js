@@ -94,7 +94,7 @@ app.get("/profile", (req, res) => {
 
 // LOGOUT USER
 app.post("/logout", (req, res) => {
-  res.clearCookie("token", { sameSite: "none", secure: true }).json("ok");
+  res.clearCookie("token", { sameSite: "none", secure: false }).json("ok");
 });
 
 // CREATE NEW POST
@@ -103,24 +103,25 @@ app.post("/post", async (req, res) => {
     const { token } = req.cookies;
     if (!token) {
       res.status(401);
-      res.end();
-    }
-    console.log(token);
-    jwt.verify(token, secret, {}, async (err, info) => {
-      if (err) throw err;
-      const { title, content, summary, file, filename, category } = req.body;
-      const imageRespons = await imageService.upload(filename, file);
-      const postDoc = await post.create({
-        title,
-        content,
-        summary,
-        category,
-        cover: imageRespons,
-        author: info.id,
-      });
+      return res.end();
+    } else {
+      console.log(token);
+      jwt.verify(token, secret, {}, async (err, info) => {
+        if (err) throw err;
+        const { title, content, summary, file, filename, category } = req.body;
+        const imageRespons = await imageService.upload(filename, file);
+        const postDoc = await post.create({
+          title,
+          content,
+          summary,
+          category,
+          cover: imageRespons,
+          author: info.id,
+        });
 
-      res.json(postDoc);
-    });
+        res.json(postDoc);
+      });
+    }
   } catch (err) {
     const { token } = req.cookies;
     console.log(token);
