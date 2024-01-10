@@ -78,6 +78,11 @@ app.post("/login", async (req, res) => {
 app.get("/profile", (req, res) => {
   try {
     const { token } = req.cookies;
+    if (!token) {
+      res.status(401);
+      res.end();
+    }
+    console.log(token);
     jwt.verify(token, secret, {}, (err, info) => {
       if (err) throw err;
       res.json(info);
@@ -100,6 +105,7 @@ app.post("/post", async (req, res) => {
       res.status(401);
       res.end();
     }
+    console.log(token);
     jwt.verify(token, secret, {}, async (err, info) => {
       if (err) throw err;
       const { title, content, summary, file, filename, category } = req.body;
@@ -116,6 +122,8 @@ app.post("/post", async (req, res) => {
       res.json(postDoc);
     });
   } catch (err) {
+    const { token } = req.cookies;
+    console.log(token);
     res.status(500).json(err);
   }
 });
@@ -123,6 +131,7 @@ app.post("/post", async (req, res) => {
 // UPDATE POST
 app.put("/post", async (req, res) => {
   const { token } = req.cookies;
+  console.log(token);
   jwt.verify(token, secret, {}, async (err, info) => {
     if (err) throw err;
     const { id, title, summary, content, file, filename, category } = req.body;
