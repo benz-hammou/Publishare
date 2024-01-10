@@ -76,11 +76,15 @@ app.post("/login", async (req, res) => {
 
 // GET USER
 app.get("/profile", (req, res) => {
-  const { token } = req.cookies;
-  jwt.verify(token, secret, {}, (err, info) => {
-    if (err) throw err;
-    res.json(info);
-  });
+  try {
+    const { token } = req.cookies;
+    jwt.verify(token, secret, {}, (err, info) => {
+      if (err) throw err;
+      res.json(info);
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // LOGOUT USER
