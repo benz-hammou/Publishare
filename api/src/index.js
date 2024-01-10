@@ -81,12 +81,13 @@ app.get("/profile", (req, res) => {
     if (!token) {
       res.status(401);
       res.end();
+    } else {
+      console.log(token);
+      jwt.verify(token, secret, {}, (err, info) => {
+        if (err) throw err;
+        res.json(info);
+      });
     }
-    console.log(token);
-    jwt.verify(token, secret, {}, (err, info) => {
-      if (err) throw err;
-      res.json(info);
-    });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -94,7 +95,7 @@ app.get("/profile", (req, res) => {
 
 // LOGOUT USER
 app.post("/logout", (req, res) => {
-  res.clearCookie("token", { sameSite: "none", secure: false }).json("ok");
+  res.clearCookie("token", { sameSite: "none", secure: true }).json("ok");
 });
 
 // CREATE NEW POST
