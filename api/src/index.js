@@ -61,7 +61,7 @@ app.post("/login", async (req, res) => {
       jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
         if (err) throw err;
 
-        res.cookie("token", token, { sameSite: "none", secure: true }).json({
+        res.cookie("auth-token", token, { sameSite: "none", secure: true }).json({
           id: userDoc._id,
           username,
         });
@@ -95,7 +95,7 @@ app.get("/profile", (req, res) => {
 
 // LOGOUT USER
 app.post("/logout", (req, res) => {
-  res.clearCookie("token", { sameSite: "none", secure: true }).json("ok");
+  res.clearCookie("auth-token", { sameSite: "none", secure: true }).json("ok");
 });
 
 // CREATE NEW POST
