@@ -65,7 +65,7 @@ app.post("/login", async (req, res) => {
           .cookie("token", token, {
             sameSite: "Lax",
             maxAge: 3600000,
-            domain: ".onrender.com"
+            domain: "front-gffr.onrender.com"
           })
           .json({
             id: userDoc._id,
