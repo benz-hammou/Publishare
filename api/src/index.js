@@ -61,10 +61,17 @@ app.post("/login", async (req, res) => {
       jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
         if (err) throw err;
 
-        res.cookie("auth-token", token, { sameSite: "none", secure: true }).json({
-          id: userDoc._id,
-          username,
-        });
+        res
+          .cookie("token", token, {
+            sameSite: "none",
+            secure: true,
+            expires: new Date(Date.now() + 900000),
+            httpOnly: true,
+          })
+          .json({
+            id: userDoc._id,
+            username,
+          });
       });
     } else {
       res.status(401).json("wrong credentials (unauthorize)");
@@ -80,6 +87,7 @@ app.get("/profile", (req, res) => {
     const { token } = req.cookies;
     if (!token) {
       res.status(401);
+      console.log("pas de token");
       res.end();
     } else {
       console.log(token);
@@ -95,7 +103,7 @@ app.get("/profile", (req, res) => {
 
 // LOGOUT USER
 app.post("/logout", (req, res) => {
-  res.clearCookie("auth-token", { sameSite: "none", secure: true }).json("ok");
+  res.clearCookie("token", { sameSite: "none", secure: true }).json("ok");
 });
 
 // CREATE NEW POST
