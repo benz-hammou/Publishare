@@ -65,7 +65,7 @@ app.post("/login", async (req, res) => {
           .cookie("token", token, {
             sameSite: "Lax",
             secure: true,
-            expires: new Date(Date.now() + 900000),
+            maxAge: 3600000,
           })
           .json({
             id: userDoc._id,
