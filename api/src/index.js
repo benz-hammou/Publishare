@@ -66,6 +66,7 @@ app.post("/login", async (req, res) => {
             sameSite: "Lax",
             maxAge: 3600000,
             secure: false,
+            domain: ".onrender.com"
           })
           .json({
             id: userDoc._id,
