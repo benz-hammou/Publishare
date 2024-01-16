@@ -63,7 +63,7 @@ app.post("/login", async (req, res) => {
 
         res
           .cookie("token", token, {
-            sameSite: "Lax",
+            sameSite: "none",
             secure: true,
             maxAge: 3600000,
           })
