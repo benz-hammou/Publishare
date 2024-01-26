@@ -18,6 +18,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { API_BASE_URL } from "../constants";
+import { fetchAPI } from "../utiles/apiCallStorage";
 
 const Header = () => {
   const { setUserInfo, userInfo } = useContext(UserContext);
@@ -34,14 +35,18 @@ const Header = () => {
     }, "400");
   }, [pathname]);
 
-  useEffect(() => {
-    fetch(`${API_BASE_URL}/profile`, {
-      credentials: "include",
-    }).then((res) => {
-      res.json().then((userInfo) => {
-        setUserInfo(userInfo);
+  const getProfile = async () => {
+    try {
+      const res = await fetchAPI(`${API_BASE_URL}/profile`, {
+        method: "GET",
       });
-    });
+      setUserInfo(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getProfile();
   }, []);
 
   const logout = () => {
@@ -51,6 +56,7 @@ const Header = () => {
         method: "POST",
       });
       setUserInfo(null);
+      localStorage.removeItem("token");
     } catch (error) {
       console.log(
         "Fetche error: Logging out is not possible, please try again",
@@ -87,7 +93,10 @@ const Header = () => {
               isActive ? "block" : "hidden"
             } lg:block`}
           >
-            <a href className="flex justify-center items-center lg:font-bold lg:uppercase">
+            <a
+              href
+              className="flex justify-center items-center lg:font-bold lg:uppercase"
+            >
               <Link to={`/category/${title.key}`}>{title.name}</Link>
             </a>
           </ListItem>
@@ -179,11 +188,7 @@ const Header = () => {
         <Navbar className="navbar bg-opacity-50 fixed top-0 z-10 h-max rounded-none p-4 lg:px-8 lg:py-4 lg:max-w-5xl xl:max-w-7xl lg:shadow-none">
           <div className="flex items-center justify-between lg:justify-center text-blue-gray-900">
             <Link to="/" className=" lg:min-w-9rem">
-              <img
-                className="h-12"
-                src={MyLogo}
-                alt="Publishare Logo"
-              />
+              <img className="h-12" src={MyLogo} alt="Publishare Logo" />
             </Link>
 
             <div className="flex items-center gap-4">

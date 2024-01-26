@@ -3,6 +3,7 @@ import { Input } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../components/UserContext";
 import { API_BASE_URL } from "../constants";
+import { fetchAPI } from "../utiles/apiCallStorage";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -13,21 +14,15 @@ const LoginPage = () => {
   const login = async (e) => {
     try {
       e.preventDefault();
-      const res = await fetch(`${API_BASE_URL}/login`, {
+      const res = await fetchAPI(`${API_BASE_URL}/login`, {
         method: "POST",
         body: JSON.stringify({ username, password }),
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
       });
-      if (res.ok) {
-        alert("You are Loged In !");
-        res.json().then((userInfo) => {
-          setUserInfo(userInfo);
-          navigate("/");
-        });
-      } else {
-        alert("wrong credentials");
-      }
+      alert("You are Loged In !");
+      setUserInfo(res);
+      navigate("/");
+      localStorage.setItem("token", res.token);
     } catch (error) {
       console.log(
         "Fetche error: Logging in is not possible, please try again",

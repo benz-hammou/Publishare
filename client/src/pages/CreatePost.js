@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Editor from "../components/Editor";
 import categoriesData from "../data/CategoriesData";
 import { API_BASE_URL } from "../constants";
+import { fetchAPI } from "../utiles/apiCallStorage";
 
 const CreatePost = ({ getPosts }) => {
   const [title, setTitle] = useState("");
@@ -47,16 +48,15 @@ const CreatePost = ({ getPosts }) => {
         data.set("filename", files?.[0].name);
       }
 
-      const res = await fetch(`${API_BASE_URL}/post`, {
+      console.log(JSON.stringify(Object.fromEntries(data)));
+
+      await fetchAPI(`${API_BASE_URL}/post`, {
         method: "POST",
-        body: data,
-        credentials: "include",
+        body: JSON.stringify(Object.fromEntries(data)),
       });
-      if (res.ok) {
-        await getPosts();
-        navigate("/");
-        console.log("The post has been created");
-      }
+      await getPosts();
+      navigate("/");
+      console.log("The post has been created");
     } catch (error) {
       console.log(
         "Fetche error: The post could not be created, please try again",

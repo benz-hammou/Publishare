@@ -6,23 +6,20 @@ import { Link, useParams } from "react-router-dom";
 import { UserContext } from "../components/UserContext";
 import Delete from "../components/Delete";
 import { API_BASE_URL } from "../constants";
+import { fetchAPI } from "../utiles/apiCallStorage";
 
-const PostPage = ({getPosts}) => {
+const PostPage = ({ getPosts }) => {
   const [postInfo, setPostInfo] = useState(null);
   const { userInfo } = useContext(UserContext);
   const { id } = useParams();
 
   const getPostId = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/post/${id}`);
-      const data = await res.json();
-      console.log(data);
-      return setPostInfo(data);
+      const res = await fetchAPI(`${API_BASE_URL}/post/${id}`);
+      console.log(res);
+      return setPostInfo(res);
     } catch (error) {
-      console.log(
-        "Fetche error: Your post cannot be displayed.",
-        error
-      );
+      console.log("Fetche error: Your post cannot be displayed.", error);
     }
   };
 
@@ -62,7 +59,7 @@ const PostPage = ({getPosts}) => {
         </div>
         {userInfo?.id === author?._id && (
           <div className="flex ml-4">
-            <Delete id={id} getPosts={getPosts}/>
+            <Delete id={id} getPosts={getPosts} />
 
             <Link to={`/edit/${_id}`}>
               <PencilSquareIcon className="h-6 w-6 ml-2 text-deep-orange-300 hover:scale-150" />

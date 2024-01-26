@@ -10,6 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Editor from "../components/Editor";
 import categoriesData from "../data/CategoriesData";
 import { API_BASE_URL } from "../constants";
+import { fetchAPI } from "../utiles/apiCallStorage";
 
 const EditPost = ({ getPosts }) => {
   const { id } = useParams();
@@ -68,16 +69,14 @@ const EditPost = ({ getPosts }) => {
         data.set("filename", files?.[0].name);
       }
 
-      const res = await fetch(`${API_BASE_URL}/post`, {
+      await fetchAPI(`${API_BASE_URL}/post`, {
         method: "PUT",
-        body: data,
-        credentials: "include",
+        body: JSON.stringify(Object.fromEntries(data)),
       });
-      if (res.ok) {
-        await getPosts();
-        navigate(`/post/${id}`);
-        console.log("The post has been edited");
-      }
+
+      await getPosts();
+      navigate(`/post/${id}`);
+      console.log("The post has been edited");
     } catch (error) {
       console.log(
         "Fetche error: The post could not be edited, please try again",
