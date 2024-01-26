@@ -5,7 +5,6 @@ const user = require("../models/user");
 const post = require("../models/post");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
 var multer = require("multer");
 var upload = multer({
   limits: {
@@ -29,8 +28,8 @@ app.use(
     origin: ["https://front-gffr.onrender.com", "http://localhost:3000"],
   })
 );
-app.use(express.json());
-app.use(cookieParser());
+app.use(express.json({ limit: "200mb" }));
+app.use(express.urlencoded({ extended: true, limit: "200mb" }));
 app.use(upload.array());
 
 // REGISTER USER
@@ -52,31 +51,23 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   try {
+    console.log(username, password);
     const userDoc = await user.findOne({ username });
     const passwordOk = bcrypt.compareSync(password, userDoc.password);
     if (passwordOk) {
-      // logged in
-
-      // code pas bien compris !
       jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
         if (err) throw err;
-
-        res
-          .cookie("token", token, {
-            sameSite: "none",
-            secure: true,
-            maxAge: 360000000,
-            domain : "*.onrender.com"
-          })
-          .json({
-            id: userDoc._id,
-            username,
-          });
+        res.json({
+          id: userDoc._id,
+          username,
+          token,
+        });
       });
     } else {
       res.status(401).json("wrong credentials (unauthorize)");
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -84,11 +75,13 @@ app.post("/login", async (req, res) => {
 // GET USER
 app.get("/profile", (req, res) => {
   try {
-    const { token } = req.cookies;
-    if (!token) {
+    const { authorization } = req.headers;
+    const token = authorization?.split(" ")?.[1];
+    console.log("salammmmmmmmmmmmm", typeof token);
+    if (token === "null") {
       res.status(401);
       console.log("pas de token");
-      res.end();
+      return res.end();
     } else {
       console.log(token);
       jwt.verify(token, secret, {}, (err, info) => {
@@ -97,19 +90,21 @@ app.get("/profile", (req, res) => {
       });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
 
 // LOGOUT USER
 app.post("/logout", (req, res) => {
-  res.clearCookie("token", { sameSite: "none", secure: true }).json("ok");
+  res.json("ok");
 });
 
 // CREATE NEW POST
 app.post("/post", async (req, res) => {
   try {
-    const { token } = req.cookies;
+    const { authorization } = req.headers;
+    const token = authorization?.split(" ")?.[1];
     if (!token) {
       res.status(401);
       return res.end();
@@ -127,12 +122,11 @@ app.post("/post", async (req, res) => {
           cover: imageRespons,
           author: info.id,
         });
-
         res.json(postDoc);
       });
     }
   } catch (err) {
-    const { token } = req.cookies;
+    const { token } = req.headers;
     console.log(token);
     res.status(500).json(err);
   }
@@ -140,7 +134,8 @@ app.post("/post", async (req, res) => {
 
 // UPDATE POST
 app.put("/post", async (req, res) => {
-  const { token } = req.cookies;
+  const { authorization } = req.headers;
+  const token = authorization?.split(" ")?.[1];
   console.log(token);
   jwt.verify(token, secret, {}, async (err, info) => {
     if (err) throw err;

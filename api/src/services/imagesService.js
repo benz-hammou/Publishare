@@ -17,6 +17,9 @@ const s3 = new AWS.S3({
  */
 
 async function upload(imageName, base64Image, type) {
+  if (!imageName || !base64Image) {
+    return "";
+  }
   const params = {
     Bucket: `${BUCKET_NAME}/images`,
     Key: imageName,
@@ -30,7 +33,6 @@ async function upload(imageName, base64Image, type) {
 
   try {
     data = await promiseUpload(params);
-
   } catch (err) {
     console.error(err);
     return "";
