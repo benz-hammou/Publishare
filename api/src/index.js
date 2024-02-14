@@ -77,10 +77,10 @@ app.get("/profile", (req, res) => {
   try {
     const { authorization } = req.headers;
     const token = authorization?.split(" ")?.[1];
-    console.log("salammmmmmmmmmmmm", typeof token);
+    console.log(typeof token);
     if (token === "null") {
       res.status(401);
-      console.log("pas de token");
+      console.log("no token");
       return res.end();
     } else {
       console.log(token);
@@ -150,7 +150,7 @@ app.put("/post", async (req, res) => {
 
     const isAutor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
     if (!isAutor) {
-      return res.status(400).json("you are not the author");
+      return res.status(400).json("You are not the author");
     }
     await postDoc.updateOne({
       title,
