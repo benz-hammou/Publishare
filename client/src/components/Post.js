@@ -1,4 +1,5 @@
 import React from "react";
+import Skeleton from "./Skeleton";
 import { format } from "date-fns";
 import {
   Card,
@@ -9,9 +10,10 @@ import {
 } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
-const Post = ({ posts }) => {
+const Post = ({ posts, isLoading }) => {
   return (
     <>
+      {isLoading && new Array(3).fill(null).map(() => <Skeleton />)}
       {posts.length > 0 &&
         posts
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

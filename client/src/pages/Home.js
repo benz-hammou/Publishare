@@ -1,9 +1,9 @@
 import Post from "../components/Post";
 
-const Home = ({ posts }) => {
+const Home = ({ posts, isLoading }) => {
   return (
     <>
-      <Post posts={posts} />
+      <Post posts={posts} isLoading={isLoading} />
     </>
   );
 };

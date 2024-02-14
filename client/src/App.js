@@ -14,6 +14,7 @@ import SelectCategory from "./components/SelectCategory";
 
 const App = () => {
   const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getPosts = async () => {
     try {
@@ -25,10 +26,13 @@ const App = () => {
         "Fetche error: The post could not be displayed, please try again.",
         error
       );
+    } finally {
+      return setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    setIsLoading(true);
     getPosts();
   }, []);
 
@@ -38,12 +42,21 @@ const App = () => {
         <UserContextProvider>
           <Header />
           <Routes>
-            <Route path="/" exact element={<Home posts={posts} />} />
+            <Route path="/" exact element={<Home posts={posts} isLoading={isLoading} />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/create" element={<CreatePost getPosts={getPosts}/>} />
-            <Route path="/post/:id" element={<PostPage getPosts={getPosts}/>} />
-            <Route path="/edit/:id" element={<EditPost getPosts={getPosts}/>} />
+            <Route
+              path="/create"
+              element={<CreatePost getPosts={getPosts} />}
+            />
+            <Route
+              path="/post/:id"
+              element={<PostPage getPosts={getPosts} />}
+            />
+            <Route
+              path="/edit/:id"
+              element={<EditPost getPosts={getPosts} />}
+            />
             <Route path="category">
               <Route path=":id" element={<SelectCategory posts={posts} />} />
             </Route>
