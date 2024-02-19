@@ -14,7 +14,9 @@ const Post = ({ posts, isLoading }) => {
   return (
     <>
       {isLoading && new Array(3).fill(null).map(() => <Skeleton />)}
-      {posts.length > 0 &&
+      {posts.length === 0 && !isLoading ? (
+        <h1>Articles not Found</h1>
+      ) : (
         posts
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
           .map((post) => {
@@ -99,7 +101,8 @@ const Post = ({ posts, isLoading }) => {
                 </CardBody>
               </Card>
             );
-          })}
+          })
+      )}
     </>
   );
 };

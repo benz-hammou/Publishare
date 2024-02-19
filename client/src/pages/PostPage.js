@@ -7,8 +7,9 @@ import { UserContext } from "../components/UserContext";
 import Delete from "../components/Delete";
 import { API_BASE_URL } from "../constants";
 import { fetchAPI } from "../utiles/apiCallStorage";
+import Skeleton from "../components/Skeleton";
 
-const PostPage = ({ getPosts }) => {
+const PostPage = ({ getPosts, isLoading }) => {
   const [postInfo, setPostInfo] = useState(null);
   const { userInfo } = useContext(UserContext);
   const { id } = useParams();
@@ -33,6 +34,7 @@ const PostPage = ({ getPosts }) => {
 
   return (
     <div>
+      {isLoading && new Array(3).fill(null).map(() => <Skeleton />)}
       <h1 className="flex justify-center mb-8">{title}</h1>
       <div className=" flex justify-center items-center rounded-xl overflow-hidden mb-8 max-h-50vh lg:w-full">
         <img

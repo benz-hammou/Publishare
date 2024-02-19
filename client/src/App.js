@@ -51,7 +51,7 @@ const App = () => {
             />
             <Route
               path="/post/:id"
-              element={<PostPage getPosts={getPosts} />}
+              element={<PostPage getPosts={getPosts} isLoading={isLoading}/>}
             />
             <Route
               path="/edit/:id"
